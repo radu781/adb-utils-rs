@@ -4,12 +4,23 @@ pub struct ADBManager {
     connected: bool,
     path: String,
 }
-
-pub enum ADBCommand {
-    List,
-    Move,
-    Push,
-    Pull,
+pub struct ADBList {
+    path: Option<String>,
+}
+pub struct ADBMove {
+    path: Option<String>,
+    from: String,
+    to: String,
+}
+pub struct ADBPush {
+    path: Option<String>,
+    local: String,
+    remote: String,
+}
+pub struct ADBPull {
+    path: Option<String>,
+    remote: String,
+    local: String,
 }
 
 pub struct ADBResult {
@@ -35,22 +46,23 @@ impl ADBManager {
                     self.connected = true;
                     return Ok(());
                 }
-                return Err(s.status.to_string());
+                Err(s.status.to_string())
             }
-            Err(e) => return Err(e.to_string()),
+            Err(e) => Err(e.to_string()),
         }
     }
 
-    pub fn cwd(&mut self, path: &String) {
-        if !path.ends_with("/") {
-            self.path = path.clone() + "/";
+    pub fn cwd(&mut self, path: &str) {
+        if !path.ends_with('/') {
+            self.path = path.to_owned() + "/";
         } else {
-            self.path = path.clone();
+            self.path = path.to_owned();
         }
     }
 
-    pub fn shell(&self, cmd: &ADBCommand, params: &Vec<String>) -> Result<ADBResult, String> {
-        let mut command = self.build_command(cmd, params)?;
+    pub fn shell(&self, cmd: &mut impl ADBCommand) -> Result<ADBResult, String> {
+        cmd.path(self.path.clone());
+        let mut command = cmd.build()?;
         match command.output() {
             Ok(ok) => {
                 if ok.status.success() {
@@ -63,48 +75,6 @@ impl ADBManager {
             }
             Err(e) => Err(e.to_string()),
         }
-    }
-
-    fn build_command(&self, cmd: &ADBCommand, params: &Vec<String>) -> Result<Command, String> {
-        let mut shell = Command::new("adb");
-        shell.arg("shell");
-        let mut simple_shell = Command::new("adb");
-        match cmd {
-            ADBCommand::List => {
-                if params.len() > 0 {
-                    shell.arg(format!("ls {}{}", self.path, params[0]))
-                } else {
-                    shell.arg(format!("ls {}", self.path))
-                }
-            }
-            ADBCommand::Move => {
-                if params.len() != 2 {
-                    return Err("Expected 2 parameters for move".to_string());
-                }
-                shell.arg(format!(
-                    "mv {}{} {}{}",
-                    self.path, params[0], self.path, params[1]
-                ))
-            }
-            ADBCommand::Push => {
-                if params.len() != 2 {
-                    return Err("Expected 2 parameters for push".to_string());
-                }
-                simple_shell.arg(format!("push {} {}", params[0], params[1]))
-            }
-            ADBCommand::Pull => {
-                if params.len() != 2 {
-                    return Err("Expected 2 parameters for pull".to_string());
-                }
-                simple_shell.arg("pull");
-                simple_shell.arg(format!("{}{}", self.path, params[0]));
-                simple_shell.arg(&params[1])
-            }
-        };
-        if shell.get_args().len() == 1{
-            return Ok(simple_shell);
-        }
-        return Ok(shell);
     }
 
     pub fn disconnect(&mut self) {
@@ -121,12 +91,133 @@ impl ADBManager {
     }
 }
 
-impl ADBResult {
-    pub fn to_string(self) -> String {
-        self.data
+trait ADBCommand {
+    fn path(&mut self, path: String);
+    fn build(&self) -> Result<Command, String>;
+}
+
+impl ADBList {
+    pub fn new() -> Self {
+        ADBList { path: None }
+    }
+}
+
+impl ADBCommand for ADBList {
+    fn path(&mut self, path: String) {
+        self.path = Some(path);
     }
 
-    pub fn to_vec(self) -> Vec<String> {
+    fn build(&self) -> Result<Command, String> {
+        match &self.path {
+            Some(path) => {
+                let mut shell = Command::new("adb");
+                shell.arg("shell");
+                // if params.len() > 0 {
+                //     shell.arg(format!("ls {}{}", path, params[0]));
+                // } else {
+                shell.arg(format!("ls {}", path));
+                // }
+                Ok(shell)
+            }
+            None => Err("No path specified".to_string()),
+        }
+    }
+}
+
+impl ADBMove {
+    pub fn new(from: &str, to: &str) -> Self {
+        ADBMove {
+            path: None,
+            from: from.to_owned(),
+            to: to.to_owned(),
+        }
+    }
+}
+
+impl ADBCommand for ADBMove {
+    fn path(&mut self, path: String) {
+        self.path = Some(path);
+    }
+
+    fn build(&self) -> Result<Command, String> {
+        match &self.path {
+            Some(path) => {
+                let mut shell = Command::new("adb");
+                shell.arg("shell");
+                shell.arg(format!("mv {}{} {}{}", path, self.from, path, self.to));
+                Ok(shell)
+            }
+            None => Err("No path specified".to_string()),
+        }
+    }
+}
+
+impl ADBPush {
+    pub fn new(local: &str, remote: &str) -> Self {
+        ADBPush {
+            path: None,
+            local: local.to_owned(),
+            remote: remote.to_owned(),
+        }
+    }
+}
+
+impl ADBCommand for ADBPush {
+    fn path(&mut self, path: String) {
+        self.path = Some(path);
+    }
+
+    fn build(&self) -> Result<Command, String> {
+        match &self.path {
+            Some(path) => {
+                let mut shell = Command::new("adb");
+                shell
+                    .arg("push")
+                    .arg(&self.local)
+                    .arg(format!("{}{}", path, self.remote));
+                Ok(shell)
+            }
+            None => Err("No path specified".to_string()),
+        }
+    }
+}
+
+impl ADBPull {
+    pub fn new(remote: &str, local: &str) -> Self {
+        ADBPull {
+            path: None,
+            remote: remote.to_owned(),
+            local: local.to_owned(),
+        }
+    }
+}
+
+impl ADBCommand for ADBPull {
+    fn path(&mut self, path: String) {
+        self.path = Some(path);
+    }
+
+    fn build(&self) -> Result<Command, String> {
+        match &self.path {
+            Some(path) => {
+                let mut shell = Command::new("adb");
+                shell
+                    .arg("pull")
+                    .arg(format!("{}{}", path, self.remote))
+                    .arg(&self.local);
+                Ok(shell)
+            }
+            None => Err("No path specified".to_string()),
+        }
+    }
+}
+
+impl ADBResult {
+    pub fn to_string(&self) -> &String {
+        &self.data
+    }
+
+    pub fn to_vec(&self) -> Vec<String> {
         self.data.split("\r\n").map(|x| x.to_string()).collect()
     }
 }

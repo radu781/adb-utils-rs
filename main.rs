@@ -10,12 +10,10 @@ fn batch_rename(path: &str, mut start: i32) {
     let dir_content = fs::read_dir(path).unwrap();
     let mut file_names: LinkedList<String> = LinkedList::new();
 
-    for entry in dir_content {
-        if let Ok(entry) = entry {
-            if let Some(file_name) = entry.file_name().to_str() {
-                if !entry.path().is_dir() {
-                    file_names.push_back(file_name.to_owned());
-                }
+    for entry in dir_content.flatten() {
+        if let Some(file_name) = entry.file_name().to_str() {
+            if !entry.path().is_dir() {
+                file_names.push_back(file_name.to_owned());
             }
         }
     }
@@ -41,6 +39,6 @@ fn batch_rename(path: &str, mut start: i32) {
 
 fn main() {
     let mut adb = ADBManager::new();
-    adb.connect("192.168.0.105", "46007").unwrap();
+    adb.connect("192.168.0.105", "39615").unwrap();
     adb.disconnect();
 }
