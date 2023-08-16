@@ -2,6 +2,10 @@
 name = "adb-utils"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+description = "Rust implementation of commonly used ADB commands"
+repository = "https://github.com/radu781/adb-utils-rs"
+keywords = ["adb"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
