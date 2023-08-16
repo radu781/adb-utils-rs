@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "adb_files"
+name = "adb-utils"
 version = "0.1.0"

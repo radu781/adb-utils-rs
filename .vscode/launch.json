@@ -7,16 +7,54 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'adb_files'",
+            "name": "Debug unit tests in library 'adb_utils'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=adb-utils"
+                ],
+                "filter": {
+                    "name": "adb_utils",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug example 'list_files'",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=adb_files",
-                    "--package=adb_files"
+                    "--example=list_files",
+                    "--package=adb-utils"
                 ],
                 "filter": {
-                    "name": "adb_files",
-                    "kind": "bin"
+                    "name": "list_files",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in example 'list_files'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--example=list_files",
+                    "--package=adb-utils"
+                ],
+                "filter": {
+                    "name": "list_files",
+                    "kind": "example"
                 }
             },
             "args": [],

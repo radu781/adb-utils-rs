@@ -1,5 +1,5 @@
 [package]
-name = "adb_files"
+name = "adb-utils"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,6 +7,6 @@ edition = "2021"
 
 [dependencies]
 
-[[bin]]
-name = "adb_files"
-path = "main.rs"
+[lib]
+name = "adb_utils"
+path = "src/lib.rs"
