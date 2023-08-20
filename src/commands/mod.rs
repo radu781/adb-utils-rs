@@ -1,17 +1,19 @@
 use std::process::Command;
 
-pub mod shell;
 pub mod app_installation;
-pub mod general;
 pub mod file_transfer;
+pub mod general;
+pub mod shell;
 
 pub trait ADBCommand {
     fn build(&self) -> Result<Command, String>;
+    fn process_output(&self, output: ADBResult) -> ADBResult;
 }
 
 pub trait ADBPathCommand {
     fn path(&mut self, path: String);
     fn build(&self) -> Result<Command, String>;
+    fn process_output(&self, output: ADBResult) -> ADBResult;
 }
 
 pub struct ADBResult {

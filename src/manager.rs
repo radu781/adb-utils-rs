@@ -42,13 +42,15 @@ impl ADBManager {
 
     pub fn execute(&self, cmd: &mut impl ADBCommand) -> Result<ADBResult, String> {
         let command = cmd.build()?;
-        self.execute_impl(command)
+        let result = self.execute_impl(command)?;
+        Ok(cmd.process_output(result))
     }
 
     pub fn execute_path_based(&self, cmd: &mut impl ADBPathCommand) -> Result<ADBResult, String> {
         cmd.path(self.path.clone());
         let command = cmd.build()?;
-        self.execute_impl(command)
+        let result = self.execute_impl(command)?;
+        Ok(cmd.process_output(result))
     }
 
     fn execute_impl(&self, mut command: Command) -> Result<ADBResult, String> {

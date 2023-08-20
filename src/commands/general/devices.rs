@@ -1,7 +1,8 @@
 use std::process::Command;
 
-use crate::ADBCommand;
+use crate::{ADBCommand, ADBResult};
 
+#[derive(Default)]
 pub struct ADBDevices {}
 
 impl ADBCommand for ADBDevices {
@@ -9,5 +10,17 @@ impl ADBCommand for ADBDevices {
         let mut shell = Command::new("adb");
         shell.arg("devices");
         Ok(shell)
+    }
+
+    fn process_output(&self, output: ADBResult) -> ADBResult {
+        ADBResult {
+            data: output
+                .data
+                .replace("List of devices attached", "")
+                .replace("device", "")
+                .replace("\r\n", "\n")
+                .replace("\n\n", "\n")
+                .replace('\t', "")
+        }
     }
 }

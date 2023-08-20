@@ -1,6 +1,6 @@
 use std::process::Command;
 
-use crate::ADBCommand;
+use crate::{ADBCommand, ADBResult};
 
 pub struct ADBPull {
     path: Option<String>,
@@ -31,5 +31,9 @@ impl ADBCommand for ADBPull {
             }
             None => Err("No path specified".to_string()),
         }
+    }
+
+    fn process_output(&self, output: ADBResult) -> ADBResult {
+        output
     }
 }

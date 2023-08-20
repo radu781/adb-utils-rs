@@ -1,6 +1,6 @@
 use std::process::Command;
 
-use crate::ADBPathCommand;
+use crate::{ADBPathCommand, ADBResult};
 
 #[derive(Default)]
 pub struct ADBList {
@@ -26,5 +26,9 @@ impl ADBPathCommand for ADBList {
             }
             None => Err("No path specified".to_string()),
         }
+    }
+
+    fn process_output(&self, output: ADBResult) -> ADBResult {
+        output
     }
 }

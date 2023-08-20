@@ -1,6 +1,6 @@
 use std::process::Command;
 
-use crate::ADBPathCommand;
+use crate::{ADBPathCommand, ADBResult};
 
 pub struct ADBMove {
     path: Option<String>,
@@ -33,5 +33,9 @@ impl ADBPathCommand for ADBMove {
             }
             None => Err("No path specified".to_string()),
         }
+    }
+
+    fn process_output(&self, output: ADBResult) -> ADBResult {
+        output
     }
 }

@@ -31,4 +31,8 @@ impl ADBCommand for ADBPush {
             None => Err("No path specified".to_string()),
         }
     }
+
+    fn process_output(&self, mut output: crate::ADBResult) -> crate::ADBResult {
+        todo!()
+    }
 }
