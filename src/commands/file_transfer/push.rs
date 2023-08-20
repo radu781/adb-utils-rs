@@ -1,36 +1,31 @@
 use std::process::Command;
 
-use super::ADBCommand;
+use crate::ADBCommand;
 
-pub struct ADBPull {
+pub struct ADBPush {
     path: Option<String>,
-    remote: String,
     local: String,
+    remote: String,
 }
-
-impl ADBPull {
-    pub fn new(remote: &str, local: &str) -> Self {
-        ADBPull {
+impl ADBPush {
+    pub fn new(local: &str, remote: &str) -> Self {
+        ADBPush {
             path: None,
-            remote: remote.to_owned(),
             local: local.to_owned(),
+            remote: remote.to_owned(),
         }
     }
 }
 
-impl ADBCommand for ADBPull {
-    fn path(&mut self, path: String) {
-        self.path = Some(path);
-    }
-
+impl ADBCommand for ADBPush {
     fn build(&self) -> Result<Command, String> {
         match &self.path {
             Some(path) => {
                 let mut shell = Command::new("adb");
                 shell
-                    .arg("pull")
-                    .arg(format!("{}{}", path, self.remote))
-                    .arg(&self.local);
+                    .arg("push")
+                    .arg(&self.local)
+                    .arg(format!("{}{}", path, self.remote));
                 Ok(shell)
             }
             None => Err("No path specified".to_string()),

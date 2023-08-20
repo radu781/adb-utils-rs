@@ -1,24 +1,21 @@
 use std::process::Command;
 
-mod list;
-mod manager;
-mod mv;
-mod pull;
-mod push;
-
-pub use list::*;
-pub use manager::*;
-pub use mv::*;
-pub use pull::*;
-pub use push::*;
+pub mod shell;
+pub mod app_installation;
+pub mod general;
+pub mod file_transfer;
 
 pub trait ADBCommand {
+    fn build(&self) -> Result<Command, String>;
+}
+
+pub trait ADBPathCommand {
     fn path(&mut self, path: String);
     fn build(&self) -> Result<Command, String>;
 }
 
 pub struct ADBResult {
-    data: String,
+    pub(crate) data: String,
 }
 
 impl ADBResult {

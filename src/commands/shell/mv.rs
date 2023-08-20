@@ -1,6 +1,6 @@
 use std::process::Command;
 
-use super::ADBCommand;
+use crate::ADBPathCommand;
 
 pub struct ADBMove {
     path: Option<String>,
@@ -18,7 +18,7 @@ impl ADBMove {
     }
 }
 
-impl ADBCommand for ADBMove {
+impl ADBPathCommand for ADBMove {
     fn path(&mut self, path: String) {
         self.path = Some(path);
     }

@@ -1,13 +1,13 @@
 use std::process::Command;
 
-use super::ADBCommand;
+use crate::ADBPathCommand;
 
 #[derive(Default)]
 pub struct ADBList {
     path: Option<String>,
 }
 
-impl ADBCommand for ADBList {
+impl ADBPathCommand for ADBList {
     fn path(&mut self, path: String) {
         self.path = Some(path);
     }

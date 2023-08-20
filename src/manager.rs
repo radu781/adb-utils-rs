@@ -1,5 +1,4 @@
-use super::ADBCommand;
-use crate::ADBResult;
+use crate::{ADBCommand, ADBResult, ADBPathCommand};
 use std::process::Command;
 
 #[derive(Default)]
@@ -16,7 +15,7 @@ impl ADBManager {
         }
     }
 
-    pub fn connect(&mut self, ip: &str, port: &str) -> Result<(), String> {
+    pub fn connect(&mut self, ip: &str, port: u32) -> Result<(), String> {
         let mut command = Command::new("cmd");
         command
             .arg("/c")
@@ -41,9 +40,18 @@ impl ADBManager {
         }
     }
 
-    pub fn shell(&self, cmd: &mut impl ADBCommand) -> Result<ADBResult, String> {
+    pub fn execute(&self, cmd: &mut impl ADBCommand) -> Result<ADBResult, String> {
+        let command = cmd.build()?;
+        self.execute_impl(command)
+    }
+
+    pub fn execute_path_based(&self, cmd: &mut impl ADBPathCommand) -> Result<ADBResult, String> {
         cmd.path(self.path.clone());
-        let mut command = cmd.build()?;
+        let command = cmd.build()?;
+        self.execute_impl(command)
+    }
+
+    fn execute_impl(&self, mut command: Command) -> Result<ADBResult, String> {
         match command.output() {
             Ok(ok) => {
                 if ok.status.success() {
