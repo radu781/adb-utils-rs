@@ -32,7 +32,7 @@ impl ADBCommand for ADBPush {
         }
     }
 
-    fn process_output(&self, mut output: crate::ADBResult) -> crate::ADBResult {
+    fn process_output(&self, _output: crate::ADBResult) -> crate::ADBResult {
         todo!()
     }
 }

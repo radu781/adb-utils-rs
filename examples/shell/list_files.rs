@@ -9,7 +9,7 @@ use adb_utils::manager::ADBManager;
 
 fn main() {
     let mut manager = ADBManager::new();
-    match manager.connect("192.168.0.105", 41887) {
+    match manager.connect("192.168.0.105", 35659) {
         Ok(()) => println!("Successfully connected"),
         Err(e) => println!("Could not connect: {}", e),
     }

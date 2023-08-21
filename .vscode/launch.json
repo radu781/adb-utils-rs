@@ -44,21 +44,20 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in example 'list_files'",
+            "name": "Debug example 'general_info'",
             "cargo": {
                 "args": [
-                    "test",
-                    "--no-run",
-                    "--example=list_files",
+                    "build",
+                    "--example=general_info",
                     "--package=adb-utils"
                 ],
                 "filter": {
-                    "name": "list_files",
+                    "name": "general_info",
                     "kind": "example"
                 }
             },
             "args": [],
             "cwd": "${workspaceFolder}"
-        }
+        },
     ]
 }

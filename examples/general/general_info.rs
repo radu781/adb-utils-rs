@@ -5,20 +5,17 @@
 /// cargo run --example general_info
 /// ```
 
-use adb_utils::general::ADBDevices;
-use adb_utils::general::ADBHelp;
-use adb_utils::general::ADBVersion;
-use adb_utils::general::Version;
+use adb_utils::general::{ADBDevices, ADBHelp, ADBVersion, Flags, Version};
 use adb_utils::manager::ADBManager;
 
 fn main() {
     let mut manager = ADBManager::new();
-    match manager.connect("192.168.0.105", 35659) {
+    match manager.connect("192.168.0.105", 38263) {
         Ok(()) => println!("Successfully connected"),
         Err(e) => println!("Could not connect: {}", e),
     }
 
-    let mut list = ADBDevices::default();
+    let mut list = ADBDevices::new(&vec![Flags::Long]);
     match manager.execute(&mut list) {
         Ok(ok) => println!("{}", ok.to_string()),
         Err(err) => println!("Error: {}", err),

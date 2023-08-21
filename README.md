@@ -2,13 +2,15 @@
 
 Rust implementation of commonly used ADB commands
 
-## Available commands
+## Supported commands
+
+The list of commands is from running `adb help`
 
 ### General
 
-- [ ] devices
-- [ ] help
-- [ ] version
+- [x] devices
+- [x] help
+- [x] version
 
 ### Networking
 
