@@ -14,8 +14,8 @@ The list of commands is from running `adb help`
 
 ### Networking
 
-- [ ] connect
-- [ ] disconnect
+- [x] connect
+- [x] disconnect
 - [ ] pair
 - [ ] forward
 - [ ] ppp TTY
@@ -26,7 +26,7 @@ The list of commands is from running `adb help`
 ### File transfer
 
 - [ ] push
-- [ ] pull
+- [x] pull
 - [ ] sync
 
 ### Shell

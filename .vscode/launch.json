@@ -59,5 +59,23 @@
             "args": [],
             "cwd": "${workspaceFolder}"
         },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug example 'pull'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--example=pull",
+                    "--package=adb-utils"
+                ],
+                "filter": {
+                    "name": "pull",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
     ]
 }

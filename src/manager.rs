@@ -1,16 +1,16 @@
-use crate::{ADBCommand, ADBResult, ADBPathCommand};
+use crate::{ADBCommand, ADBPathCommand, ADBResult};
 use std::process::Command;
 
 #[derive(Default)]
 pub struct ADBManager {
-    connected: bool,
+    connected: Vec<(String, u32)>,
     path: String,
 }
 
 impl ADBManager {
     pub fn new() -> ADBManager {
         ADBManager {
-            connected: false,
+            connected: vec![],
             path: "".to_string(),
         }
     }
@@ -23,7 +23,7 @@ impl ADBManager {
         match command.output() {
             Ok(s) => {
                 if s.status.success() && !String::from_utf8(s.stdout).unwrap().contains("failed") {
-                    self.connected = true;
+                    self.connected.push((ip.to_owned(), port));
                     return Ok(());
                 }
                 Err(s.status.to_string())
@@ -61,24 +61,44 @@ impl ADBManager {
                         data: String::from_utf8(ok.stdout).unwrap(),
                     })
                 } else {
-                    Err(ok.status.to_string() + &String::from_utf8(ok.stderr).unwrap())
+                    Err(ok.status.to_string()
+                        + &String::from_utf8(ok.stdout).unwrap()
+                        + &String::from_utf8(ok.stderr).unwrap())
                 }
             }
             Err(e) => Err(e.to_string()),
         }
     }
 
-    pub fn disconnect(&mut self) {
-        let mut command = Command::new("cmd");
-        command.arg("/c").arg("adb disconnect").output().ok();
-        self.connected = false;
+    pub fn disconnect(&mut self, ip: &str, port: u32) {
+        Self::disconnect_one(ip, port);
+        if let Some(index) = self
+            .connected
+            .iter()
+            .position(|x| *x == (ip.to_owned(), port))
+        {
+            self.connected.remove(index);
+        }
+    }
+
+    fn disconnect_one(ip: &str, port: u32) {
+        let mut command = Command::new("adb");
+        command
+            .arg("disconnect")
+            .arg(format!("{ip}:{port}"))
+            .output()
+            .ok();
+    }
+
+    pub fn disconnect_all(&mut self) {
+        self.connected
+            .iter()
+            .for_each(|(ip, port)| Self::disconnect_one(ip, *port));
     }
 }
 
 impl Drop for ADBManager {
     fn drop(&mut self) {
-        if self.connected {
-            self.disconnect();
-        }
+        self.disconnect_all();
     }
 }

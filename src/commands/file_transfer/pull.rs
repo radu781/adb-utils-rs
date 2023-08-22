@@ -1,6 +1,6 @@
 use std::process::Command;
 
-use crate::{ADBCommand, ADBResult};
+use crate::{ADBPathCommand, ADBResult};
 
 pub struct ADBPull {
     path: Option<String>,
@@ -18,7 +18,7 @@ impl ADBPull {
     }
 }
 
-impl ADBCommand for ADBPull {
+impl ADBPathCommand for ADBPull {
     fn build(&self) -> Result<Command, String> {
         match &self.path {
             Some(path) => {
@@ -35,5 +35,9 @@ impl ADBCommand for ADBPull {
 
     fn process_output(&self, output: ADBResult) -> ADBResult {
         output
+    }
+
+    fn path(&mut self, path: String) {
+        self.path = Some(path)
     }
 }

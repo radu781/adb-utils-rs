@@ -1,4 +1,4 @@
-use std::process::Command;
+use std::{process::Command, fmt::Display};
 
 pub mod app_installation;
 pub mod file_transfer;
@@ -27,5 +27,11 @@ impl ADBResult {
 
     pub fn to_vec(&self) -> Vec<String> {
         self.data.split("\r\n").map(|x| x.to_string()).collect()
+    }
+}
+
+impl Display for ADBResult {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.data)
     }
 }

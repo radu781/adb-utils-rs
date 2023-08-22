@@ -1,6 +1,6 @@
 [package]
 name = "adb-utils"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 license = "MIT"
 description = "Rust implementation of commonly used ADB commands"
@@ -22,3 +22,7 @@ path = "examples/shell/list_files.rs"
 [[example]]
 name = "general_info"
 path = "examples/general/general_info.rs"
+
+[[example]]
+name = "pull"
+path = "examples/file_transfer/pull.rs"
