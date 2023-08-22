@@ -4,20 +4,27 @@
 /// ```sh
 /// cargo run --example general_info
 /// ```
-
-use adb_utils::general::{ADBDevices, ADBHelp, ADBVersion, Flags, Version};
+use adb_utils::general::{ADBDevices, ADBHelp, ADBVersion, DeviceInfo, Flags, Version};
 use adb_utils::manager::ADBManager;
 
 fn main() {
     let mut manager = ADBManager::new();
-    match manager.connect("192.168.0.105", 38263) {
+    match manager.connect("192.168.0.105", 33363) {
         Ok(()) => println!("Successfully connected"),
         Err(e) => println!("Could not connect: {}", e),
     }
 
     let mut list = ADBDevices::new(&vec![Flags::Long]);
     match manager.execute(&mut list) {
-        Ok(ok) => println!("{}", ok.to_string()),
+        Ok(ok) => {
+            println!("{}", ok.to_string());
+
+            let parsed = DeviceInfo::from(ok);
+            println!(
+                "{} {} {}",
+                parsed.product, parsed.model, parsed.transport_id
+            );
+        }
         Err(err) => println!("Error: {}", err),
     }
 
@@ -26,5 +33,8 @@ fn main() {
 
     let mut version = ADBVersion::default();
     let version = Version::from(manager.execute(&mut version).unwrap());
-    println!("adb version: {}, version: {}, install: {}", version.adb_version, version.version, version.install_path);
+    println!(
+        "adb version: {}, version: {}, install: {}",
+        version.adb_version, version.version, version.install_path
+    );
 }
