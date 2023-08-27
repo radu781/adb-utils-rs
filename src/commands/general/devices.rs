@@ -2,6 +2,7 @@ use std::process::Command;
 
 use crate::{ADBCommand, ADBResult};
 
+/// List connected devices
 pub struct ADBDevices {
     shell: Command,
 }
@@ -39,6 +40,7 @@ impl ADBCommand for ADBDevices {
     }
 }
 
+/// Helper struct to help parse the result from [ADBDevices]
 #[derive(Default)]
 pub struct DeviceInfo {
     pub product: String,

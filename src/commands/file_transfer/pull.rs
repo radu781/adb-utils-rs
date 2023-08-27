@@ -1,7 +1,10 @@
 use std::process::Command;
 
-use crate::{ADBPathCommand, ADBResult, CompressionAlgorithm};
+use crate::{ADBPathCommand, ADBResult};
 
+use super::CompressionAlgorithm;
+
+/// Copy files/directories from device
 pub struct ADBPull {
     path: Option<String>,
     remote: String,
@@ -22,16 +25,19 @@ impl ADBPull {
         }
     }
 
+    /// Preserve file timestamp and mode
     pub fn timestamp(mut self) -> Self {
         self.shell.arg("-a");
         self
     }
 
+    /// Enable compression with the specified algorithm
     pub fn compression(mut self, algorithm: CompressionAlgorithm) -> Self {
         self.shell.arg("-z").arg(algorithm.to_string());
         self
     }
 
+    /// Disable compression
     pub fn no_compression(mut self) -> Self {
         self.shell.arg("-Z");
         self

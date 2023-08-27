@@ -2,6 +2,7 @@ use std::process::Command;
 
 use crate::{ADBCommand, ADBResult};
 
+/// Show the help message
 pub struct ADBHelp {
     shell: Command,
 }

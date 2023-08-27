@@ -3,7 +3,6 @@
 /// ```sh
 /// cargo run --example list_files
 /// ```
-
 use adb_utils::shell::ADBList;
 use adb_utils::manager::ADBManager;
 
@@ -17,7 +16,7 @@ fn main() {
 
     let mut list = ADBList::default();
     match manager.execute_path_based(&mut list) {
-        Ok(ok) => println!("{}", ok.to_string()),
+        Ok(ok) => println!("{}", ok),
         Err(err) => println!("Error: {}", err),
     }
 }

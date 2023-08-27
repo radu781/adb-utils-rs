@@ -2,6 +2,7 @@ use std::process::Command;
 
 use crate::{ADBCommand, ADBResult};
 
+/// Pair with a device for secure TCP/IP communication
 pub struct ADBPair {
     ip: String,
     port: u32,

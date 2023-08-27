@@ -2,6 +2,7 @@ use std::process::Command;
 
 use crate::{ADBCommand, ADBResult};
 
+/// Show the adb version
 pub struct ADBVersion {
     shell: Command,
 }
@@ -25,6 +26,7 @@ impl ADBCommand for ADBVersion {
     }
 }
 
+/// Helper struct to help parse the result from [ADBVersion]
 pub struct Version {
     pub adb_version: String,
     pub version: String,

@@ -1,6 +1,7 @@
 use crate::{ADBCommand, ADBPathCommand, ADBResult};
 use std::process::Command;
 
+/// Center struct where adb commands are built, sent and parsed
 #[derive(Default)]
 pub struct ADBManager {
     connected: Vec<(String, u32)>,
@@ -15,6 +16,7 @@ impl ADBManager {
         }
     }
 
+    /// Establish a connection to a device via TCP/IP
     pub fn connect(&mut self, ip: &str, port: u32) -> Result<(), String> {
         let mut command = Command::new("cmd");
         command
@@ -32,6 +34,8 @@ impl ADBManager {
         }
     }
 
+    /// Set the current working directory for all future commands where a path on the
+    /// remote is needed
     pub fn cwd(&mut self, path: &str) {
         if !path.ends_with('/') {
             self.path = Some(path.to_owned() + "/");
@@ -40,12 +44,14 @@ impl ADBManager {
         }
     }
 
+    /// Execute an arbitrary command
     pub fn execute(&self, cmd: &mut impl ADBCommand) -> Result<ADBResult, String> {
         let command = cmd.build()?;
         let result = self.execute_impl(command)?;
         Ok(cmd.process_output(result))
     }
 
+    /// Execute an arbitrary path command
     pub fn execute_path_based(&self, cmd: &mut impl ADBPathCommand) -> Result<ADBResult, String> {
         cmd.path(self.path.clone());
         let command = cmd.build()?;
@@ -70,6 +76,7 @@ impl ADBManager {
         }
     }
 
+    /// Disconnect from given TCP/IP device
     pub fn disconnect(&mut self, ip: &str, port: u32) {
         Self::disconnect_one(ip, port);
         if let Some(index) = self
@@ -90,6 +97,7 @@ impl ADBManager {
             .ok();
     }
 
+    /// Disconnect all connected devices
     pub fn disconnect_all(&mut self) {
         self.connected
             .iter()

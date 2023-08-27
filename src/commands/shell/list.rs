@@ -2,9 +2,21 @@ use std::process::Command;
 
 use crate::{ADBPathCommand, ADBResult};
 
-#[derive(Default)]
 pub struct ADBList {
     path: Option<String>,
+    shell: Command,
+}
+
+impl Default for ADBList {
+    fn default() -> Self {
+        let mut cmd = Command::new("adb");
+        cmd.arg("shell").arg("ls");
+
+        ADBList {
+            path: None,
+            shell: cmd,
+        }
+    }
 }
 
 impl ADBPathCommand for ADBList {
@@ -15,17 +27,10 @@ impl ADBPathCommand for ADBList {
     fn build(&mut self) -> Result<&mut Command, String> {
         match &self.path {
             Some(path) => {
-                let mut shell = Command::new("adb");
-                shell.arg("shell");
-                // if params.len() > 0 {
-                //     shell.arg(format!("ls {}{}", path, params[0]));
-                // } else {
-                shell.arg(format!("ls {}", path));
-                // }
-                todo!()
-                // Ok(&mut shell)
+                self.shell.arg(path);
+                Ok(&mut self.shell)
             }
-            None => Err("No path specified".to_string()),
+            None => Ok(&mut self.shell),
         }
     }
 

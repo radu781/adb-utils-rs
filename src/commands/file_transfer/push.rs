@@ -1,7 +1,10 @@
 use std::process::Command;
 
-use crate::{ADBPathCommand, ADBResult, CompressionAlgorithm};
+use crate::{ADBPathCommand, ADBResult};
 
+use super::CompressionAlgorithm;
+
+/// Copy local files/directories to device
 pub struct ADBPush {
     path: Option<String>,
     local: String,
@@ -22,21 +25,25 @@ impl ADBPush {
         }
     }
 
+    /// Only push files that are newer on the host than the device
     pub fn sync(mut self) -> Self {
         self.shell.arg("--sync");
         self
     }
 
+    /// Push files to device without storing to the filesystem
     pub fn dry_run(mut self) -> Self {
         self.shell.arg("-n");
         self
     }
 
+    /// Enable compression with the specified algorithm
     pub fn compression(mut self, algorithm: CompressionAlgorithm) -> Self {
         self.shell.arg("-z").arg(algorithm.to_string());
         self
     }
 
+    /// Disable compression
     pub fn no_compression(mut self) -> Self {
         self.shell.arg("-Z");
         self

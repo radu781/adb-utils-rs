@@ -3,8 +3,7 @@
 /// ```sh
 /// cargo run --example push
 /// ```
-use adb_utils::CompressionAlgorithm;
-use adb_utils::file_transfer::push::ADBPush;
+use adb_utils::file_transfer::{push::ADBPush, CompressionAlgorithm};
 use adb_utils::manager::ADBManager;
 
 fn main() {
