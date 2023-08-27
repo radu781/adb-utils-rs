@@ -1,6 +1,6 @@
-use std::{fmt::Display, process::Command};
+use std::process::Command;
 
-use crate::{ADBPathCommand, ADBResult};
+use crate::{ADBPathCommand, ADBResult, CompressionAlgorithm};
 
 pub struct ADBPush {
     path: Option<String>,
@@ -43,35 +43,13 @@ impl ADBPush {
     }
 }
 
-pub enum CompressionAlgorithm {
-    Any,
-    None,
-    Brotli,
-    Lz4,
-    Zstd,
-}
-
-impl Display for CompressionAlgorithm {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            match self {
-                CompressionAlgorithm::Any => "any",
-                CompressionAlgorithm::None => "none",
-                CompressionAlgorithm::Brotli => "brotli",
-                CompressionAlgorithm::Lz4 => "lz4",
-                CompressionAlgorithm::Zstd => "zstd",
-            }
-        )
-    }
-}
-
 impl ADBPathCommand for ADBPush {
     fn build(&mut self) -> Result<&mut Command, String> {
         match &self.path {
             Some(path) => {
-                self.shell.arg(format!("{}{}", path, self.remote));
+                self.shell
+                    .arg(format!("{}\\{}", path, self.local))
+                    .arg(&self.remote);
                 Ok(&mut self.shell)
             }
             None => Err("No path specified".to_string()),
@@ -82,7 +60,7 @@ impl ADBPathCommand for ADBPush {
         output
     }
 
-    fn path(&mut self, path: String) {
-        self.path = Some(path)
+    fn path(&mut self, path: Option<String>) {
+        self.path = path
     }
 }

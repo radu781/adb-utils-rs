@@ -6,8 +6,8 @@ pub struct ADBVersion {
     shell: Command,
 }
 
-impl ADBVersion {
-    fn new() -> Self {
+impl Default for ADBVersion {
+    fn default() -> Self {
         let mut cmd = Command::new("adb");
         cmd.arg("version");
 

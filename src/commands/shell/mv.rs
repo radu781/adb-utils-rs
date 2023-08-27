@@ -19,8 +19,8 @@ impl ADBMove {
 }
 
 impl ADBPathCommand for ADBMove {
-    fn path(&mut self, path: String) {
-        self.path = Some(path);
+    fn path(&mut self, path: Option<String>) {
+        self.path = path
     }
 
     fn build(&mut self) -> Result<&mut Command, String> {

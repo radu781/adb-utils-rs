@@ -12,7 +12,7 @@ pub trait ADBCommand {
 }
 
 pub trait ADBPathCommand {
-    fn path(&mut self, path: String);
+    fn path(&mut self, path: Option<String>);
     fn build(&mut self) -> Result<&mut Command, String>;
     fn process_output(&self, output: ADBResult) -> ADBResult;
 }
@@ -34,5 +34,29 @@ impl ADBResult {
 impl Display for ADBResult {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.data)
+    }
+}
+
+pub enum CompressionAlgorithm {
+    Any,
+    None,
+    Brotli,
+    Lz4,
+    Zstd,
+}
+
+impl Display for CompressionAlgorithm {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                CompressionAlgorithm::Any => "any",
+                CompressionAlgorithm::None => "none",
+                CompressionAlgorithm::Brotli => "brotli",
+                CompressionAlgorithm::Lz4 => "lz4",
+                CompressionAlgorithm::Zstd => "zstd",
+            }
+        )
     }
 }

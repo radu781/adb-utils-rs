@@ -6,8 +6,8 @@ pub struct ADBHelp {
     shell: Command,
 }
 
-impl ADBHelp {
-    fn new() -> Self {
+impl Default for ADBHelp {
+    fn default() -> Self {
         let mut cmd = Command::new("adb");
         cmd.arg("help");
 

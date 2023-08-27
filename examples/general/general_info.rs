@@ -4,7 +4,7 @@
 /// ```sh
 /// cargo run --example general_info
 /// ```
-use adb_utils::general::{ADBDevices, ADBHelp, ADBVersion, DeviceInfo, Flags, Version};
+use adb_utils::general::{ADBDevices, ADBHelp, ADBVersion, DeviceInfo, Version};
 use adb_utils::manager::ADBManager;
 
 fn main() {
@@ -14,7 +14,7 @@ fn main() {
         Err(e) => println!("Could not connect: {}", e),
     }
 
-    let mut list = ADBDevices::new(&vec![Flags::Long]);
+    let mut list = ADBDevices::default().long();
     match manager.execute(&mut list) {
         Ok(ok) => {
             println!("{}", ok.to_string());

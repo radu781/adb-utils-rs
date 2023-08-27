@@ -4,14 +4,14 @@ use std::process::Command;
 #[derive(Default)]
 pub struct ADBManager {
     connected: Vec<(String, u32)>,
-    path: String,
+    path: Option<String>,
 }
 
 impl ADBManager {
     pub fn new() -> ADBManager {
         ADBManager {
             connected: vec![],
-            path: "".to_string(),
+            path: None,
         }
     }
 
@@ -34,9 +34,9 @@ impl ADBManager {
 
     pub fn cwd(&mut self, path: &str) {
         if !path.ends_with('/') {
-            self.path = path.to_owned() + "/";
+            self.path = Some(path.to_owned() + "/");
         } else {
-            self.path = path.to_owned();
+            self.path = Some(path.to_owned());
         }
     }
 
@@ -53,7 +53,7 @@ impl ADBManager {
         Ok(cmd.process_output(result))
     }
 
-    fn execute_impl(&self, mut command: &mut Command) -> Result<ADBResult, String> {
+    fn execute_impl(&self, command: &mut Command) -> Result<ADBResult, String> {
         match command.output() {
             Ok(ok) => {
                 if ok.status.success() {

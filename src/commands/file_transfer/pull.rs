@@ -1,6 +1,6 @@
 use std::process::Command;
 
-use crate::{ADBPathCommand, ADBResult};
+use crate::{ADBPathCommand, ADBResult, CompressionAlgorithm};
 
 pub struct ADBPull {
     path: Option<String>,
@@ -21,6 +21,21 @@ impl ADBPull {
             shell: cmd,
         }
     }
+
+    pub fn timestamp(mut self) -> Self {
+        self.shell.arg("-a");
+        self
+    }
+
+    pub fn compression(mut self, algorithm: CompressionAlgorithm) -> Self {
+        self.shell.arg("-z").arg(algorithm.to_string());
+        self
+    }
+
+    pub fn no_compression(mut self) -> Self {
+        self.shell.arg("-Z");
+        self
+    }
 }
 
 impl ADBPathCommand for ADBPull {
@@ -40,7 +55,7 @@ impl ADBPathCommand for ADBPull {
         output
     }
 
-    fn path(&mut self, path: String) {
-        self.path = Some(path)
+    fn path(&mut self, path: Option<String>) {
+        self.path = path
     }
 }

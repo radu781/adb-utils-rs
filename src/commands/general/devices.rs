@@ -6,13 +6,15 @@ pub struct ADBDevices {
     shell: Command,
 }
 
-impl ADBDevices {
-    pub fn new() -> Self {
+impl Default for ADBDevices {
+    fn default() -> Self {
         let mut cmd = Command::new("adb");
         cmd.arg("devices");
         Self { shell: cmd }
     }
+}
 
+impl ADBDevices {
     pub fn long(mut self) -> Self {
         self.shell.arg("-l");
         self

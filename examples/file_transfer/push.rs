@@ -3,8 +3,9 @@
 /// ```sh
 /// cargo run --example push
 /// ```
-use adb_utils::manager::ADBManager;
+use adb_utils::CompressionAlgorithm;
 use adb_utils::file_transfer::push::ADBPush;
+use adb_utils::manager::ADBManager;
 
 fn main() {
     let mut manager = ADBManager::new();
@@ -13,10 +14,9 @@ fn main() {
         Err(e) => println!("Could not connect: {}", e),
     }
 
-    let mut push = ADBPush::new(
-        "C:\\Users\\Radu\\Desktop\\sample.txt",
-        "/storage/emulated/0/sample.txt",
-    );
+    manager.cwd("C:\\Users\\Radu\\Desktop");
+    let mut push = ADBPush::new("sample.txt", "/storage/emulated/0/sample.txt")
+        .compression(CompressionAlgorithm::Brotli);
     match manager.execute_path_based(&mut push) {
         Ok(ok) => println!("{ok}"),
         Err(err) => println!("error {err}"),
