@@ -77,5 +77,41 @@
             "args": [],
             "cwd": "${workspaceFolder}"
         },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug example 'push'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--example=push",
+                    "--package=adb-utils"
+                ],
+                "filter": {
+                    "name": "push",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug example 'pair'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--example=pair",
+                    "--package=adb-utils"
+                ],
+                "filter": {
+                    "name": "pair",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
     ]
 }

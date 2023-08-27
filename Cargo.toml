@@ -26,3 +26,11 @@ path = "examples/general/general_info.rs"
 [[example]]
 name = "pull"
 path = "examples/file_transfer/pull.rs"
+
+[[example]]
+name = "push"
+path = "examples/file_transfer/push.rs"
+
+[[example]]
+name = "pair"
+path = "examples/networking/pair.rs"

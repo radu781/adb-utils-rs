@@ -1,18 +1,19 @@
-use std::{process::Command, fmt::Display};
+use std::{fmt::Display, process::Command};
 
 pub mod app_installation;
 pub mod file_transfer;
 pub mod general;
+pub mod networking;
 pub mod shell;
 
 pub trait ADBCommand {
-    fn build(&self) -> Result<Command, String>;
+    fn build(&mut self) -> Result<&mut Command, String>;
     fn process_output(&self, output: ADBResult) -> ADBResult;
 }
 
 pub trait ADBPathCommand {
     fn path(&mut self, path: String);
-    fn build(&self) -> Result<Command, String>;
+    fn build(&mut self) -> Result<&mut Command, String>;
     fn process_output(&self, output: ADBResult) -> ADBResult;
 }
 

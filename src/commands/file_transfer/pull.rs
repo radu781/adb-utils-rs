@@ -6,28 +6,31 @@ pub struct ADBPull {
     path: Option<String>,
     remote: String,
     local: String,
+    shell: Command,
 }
 
 impl ADBPull {
     pub fn new(remote: &str, local: &str) -> Self {
+        let mut cmd = Command::new("adb");
+        cmd.arg("pull");
+
         ADBPull {
             path: None,
             remote: remote.to_owned(),
             local: local.to_owned(),
+            shell: cmd,
         }
     }
 }
 
 impl ADBPathCommand for ADBPull {
-    fn build(&self) -> Result<Command, String> {
+    fn build(&mut self) -> Result<&mut Command, String> {
         match &self.path {
             Some(path) => {
-                let mut shell = Command::new("adb");
-                shell
-                    .arg("pull")
+                self.shell
                     .arg(format!("{}{}", path, self.remote))
                     .arg(&self.local);
-                Ok(shell)
+                Ok(&mut self.shell)
             }
             None => Err("No path specified".to_string()),
         }

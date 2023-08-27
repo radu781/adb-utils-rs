@@ -2,14 +2,21 @@ use std::process::Command;
 
 use crate::{ADBCommand, ADBResult};
 
-#[derive(Default)]
-pub struct ADBHelp {}
+pub struct ADBHelp {
+    shell: Command,
+}
 
+impl ADBHelp {
+    fn new() -> Self {
+        let mut cmd = Command::new("adb");
+        cmd.arg("help");
+
+        Self { shell: cmd }
+    }
+}
 impl ADBCommand for ADBHelp {
-    fn build(&self) -> Result<Command, String> {
-        let mut shell = Command::new("adb");
-        shell.arg("help");
-        Ok(shell)
+    fn build(&mut self) -> Result<&mut Command, String> {
+        Ok(&mut self.shell)
     }
 
     fn process_output(&self, output: ADBResult) -> ADBResult {

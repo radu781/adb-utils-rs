@@ -12,7 +12,7 @@ impl ADBPathCommand for ADBList {
         self.path = Some(path);
     }
 
-    fn build(&self) -> Result<Command, String> {
+    fn build(&mut self) -> Result<&mut Command, String> {
         match &self.path {
             Some(path) => {
                 let mut shell = Command::new("adb");
@@ -22,7 +22,8 @@ impl ADBPathCommand for ADBList {
                 // } else {
                 shell.arg(format!("ls {}", path));
                 // }
-                Ok(shell)
+                todo!()
+                // Ok(&mut shell)
             }
             None => Err("No path specified".to_string()),
         }

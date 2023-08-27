@@ -2,14 +2,22 @@ use std::process::Command;
 
 use crate::{ADBCommand, ADBResult};
 
-#[derive(Default)]
-pub struct ADBVersion {}
+pub struct ADBVersion {
+    shell: Command,
+}
+
+impl ADBVersion {
+    fn new() -> Self {
+        let mut cmd = Command::new("adb");
+        cmd.arg("version");
+
+        Self { shell: cmd }
+    }
+}
 
 impl ADBCommand for ADBVersion {
-    fn build(&self) -> Result<Command, String> {
-        let mut shell = Command::new("adb");
-        shell.arg("version");
-        Ok(shell)
+    fn build(&mut self) -> Result<&mut Command, String> {
+        Ok(&mut self.shell)
     }
 
     fn process_output(&self, output: ADBResult) -> ADBResult {

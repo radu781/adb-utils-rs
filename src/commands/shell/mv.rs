@@ -23,13 +23,14 @@ impl ADBPathCommand for ADBMove {
         self.path = Some(path);
     }
 
-    fn build(&self) -> Result<Command, String> {
+    fn build(&mut self) -> Result<&mut Command, String> {
         match &self.path {
             Some(path) => {
                 let mut shell = Command::new("adb");
                 shell.arg("shell");
                 shell.arg(format!("mv {}{} {}{}", path, self.from, path, self.to));
-                Ok(shell)
+                todo!()
+                // Ok(&mut shell)
             }
             None => Err("No path specified".to_string()),
         }

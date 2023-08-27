@@ -53,7 +53,7 @@ impl ADBManager {
         Ok(cmd.process_output(result))
     }
 
-    fn execute_impl(&self, mut command: Command) -> Result<ADBResult, String> {
+    fn execute_impl(&self, mut command: &mut Command) -> Result<ADBResult, String> {
         match command.output() {
             Ok(ok) => {
                 if ok.status.success() {
