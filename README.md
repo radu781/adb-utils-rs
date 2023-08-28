@@ -81,17 +81,17 @@ The list of commands is from running `adb help`
 
 ### Scripting
 
-- [ ] wait-for
-- [ ] get-state
-- [ ] get-serialno
-- [ ] get-devpath
+- [x] wait-for
+- [x] get-state
+- [x] get-serialno
+- [x] get-devpath
 - [ ] remount
-- [ ] reboot
+- [x] reboot
 - [ ] sideload
-- [ ] root
-- [ ] unroot
-- [ ] usb
-- [ ] tcpip
+- [x] root
+- [x] unroot
+- [x] usb
+- [x] tcpip
 
 ### Internal debugging
 

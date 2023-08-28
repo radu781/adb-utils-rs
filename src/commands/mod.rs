@@ -4,6 +4,7 @@ pub mod app_installation;
 pub mod file_transfer;
 pub mod general;
 pub mod networking;
+pub mod scripting;
 pub mod shell;
 
 pub trait ADBCommand {
