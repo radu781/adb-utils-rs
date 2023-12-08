@@ -44,17 +44,17 @@ The list of commands is from running `adb help`
 - [x] connect
 - [x] disconnect
 - [x] pair
-- [ ] forward
+- [x] forward
 - [ ] ppp TTY
 - [ ] reverse
-- [ ] mdns check
-- [ ] mdns services
+- [x] mdns check
+- [x] mdns services
 
 ### File transfer
 
 - [x] push
 - [x] pull
-- [ ] sync
+- [x] sync
 
 ### Shell
 

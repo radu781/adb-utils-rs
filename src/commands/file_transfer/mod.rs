@@ -1,8 +1,10 @@
 pub mod pull;
 pub mod push;
+pub mod sync;
 
 pub use pull::*;
 pub use push::*;
+pub use sync::*;
 
 use std::fmt::Display;
 
